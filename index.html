@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming with Shibom | Top Up Store</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f0f1a;
+            --bg-card: #1a1a2e;
+            --primary: #e94560;
+            --neon: #00fff5;
+            --text: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body { background-color: var(--bg-dark); color: var(--text); }
+
+        /* Header */
+        header {
+            background: rgba(15, 15, 26, 0.95);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; }
+        .logo span { color: var(--neon); }
+
+        nav ul { display: flex; list-style: none; gap: 20px; }
+        nav a { color: var(--text); text-decoration: none; font-weight: 500; transition: 0.3s; }
+        nav a:hover { color: var(--neon); }
+
+        /* Container */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* Sections */
+        .section { display: none; animation: fadeIn 0.5s; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Game Grid */
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
+        
+        .game-card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: 0.3s;
+            cursor: pointer;
+            border: 1px solid #333;
+            width: 100%;
+            max-width: 300px;
+        }
+        .game-card:hover { transform: translateY(-5px); border-color: var(--neon); box-shadow: 0 0 15px rgba(0, 255, 245, 0.3); }
+        .game-card img { width: 100%; max-width: 300px; height: 150px; object-fit: cover; }
+        .game-info { padding: 15px; text-align: center; }
+        .game-info h3 { color: var(--neon); }
+
+        /* Form Styles */
+        .form-container { max-width: 600px; margin: 0 auto; background: var(--bg-card); padding: 30px; border-radius: 10px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #ccc; }
+        input, select {
+            width: 100%; padding: 12px; background: #0f0f1a; border: 1px solid #333; color: white; border-radius: 5px;
+        }
+        input:focus { border-color: var(--primary); outline: none; }
+
+        /* Package Grid */
+        .package-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-top: 15px; }
+        .package-card {
+            background: #0f0f1a; padding: 15px; text-align: center; border-radius: 5px; cursor: pointer; border: 1px solid #333;
+        }
+        .package-card.selected { border-color: var(--primary); background: rgba(233, 69, 96, 0.1); }
+        .package-card h4 { color: var(--neon); margin-bottom: 5px; }
+        .package-card p { font-size: 0.9rem; color: #aaa; }
+
+        /* Buttons */
+        .btn {
+            width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 5px;
+            font-size: 1rem; cursor: pointer; transition: 0.3s; font-weight: bold;
+        }
+        .btn:hover { background: #c0354c; }
+        .btn-outline { background: transparent; border: 1px solid var(--neon); color: var(--neon); }
+        .btn-outline:hover { background: var(--neon); color: #000; }
+
+        /* Order Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--bg-card); }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
+        th { background: #16213e; color: var(--neon); }
+        .status-pending { color: orange; }
+        .status-completed { color: #00ff00; }
+        .status-rejected { color: red; }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 10px; }
+            nav ul { gap: 10px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Gaming <span>with Shibom</span></div>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="showSection('home')">Home</a></li>
+                <li><a href="#" onclick="showSection('topup')">Top Up</a></li>
+                <li><a href="#" onclick="showSection('orders')">My Orders</a></li>
+                <li><a href="#" onclick="showSection('admin')">Admin</a></li>
+                <li><a href="#" onclick="showSection('login')">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        
+        <!-- HOME SECTION -->
+        <div id="home" class="section active">
+            <div style="text-align: center; padding: 50px 0;">
+                <h1 style="font-size: 3rem; margin-bottom: 10px;">Level Up Your Game</h1>
+                <p style="color: #aaa; margin-bottom: 30px;">Fast, Secure, and Reliable Top Up Service</p>
+                <button class="btn" style="width: 200px;" onclick="showSection('topup')">Start Top Up</button>
+            </div>
+            <h2 style="border-left: 4px solid var(--primary); padding-left: 10px;">Popular Games</h2>
+            <div class="game-grid" id="gameList">
+                <!-- Games injected via JS -->
+            </div>
+        </div>
+
+        <!-- TOP UP SECTION -->
+        <div id="topup" class="section">
+            <div class="form-container">
+                <h2 style="margin-bottom: 20px; color: var(--neon);">Free Fire Top Up</h2>
+                
+                <div class="form-group">
+                    <label>Player ID (UID)</label>
+                    <input type="number" id="uid" placeholder="Enter your UID">
+                </div>
+
+                <div class="form-group">
+                    <label>Select Package</label>
+                    <div class="package-grid" id="packageList">
+                        <!-- Packages injected via JS -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="paymentMethod">
+                        <option value="bKash">bKash</option>
+                        <option value="Nagad">Nagad</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Transaction ID</label>
+                    <input type="text" id="transId" placeholder="e.g. 5JH89...">
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Screenshot</label>
+                    <input type="file" id="screenshot" accept="image/*">
+                </div>
+
+                <button class="btn" onclick="submitOrder()">Pay Now</button>
+            </div>
+        </div>
+
+        <!-- ORDERS SECTION -->
+        <div id="orders" class="section">
+            <h2 style="margin-bottom: 20px;">My Order History</h2>
+            <div id="userOrdersList">
+                <!-- Orders injected here -->
+            </div>
+        </div>
+
+        <!-- ADMIN SECTION -->
+        <div id="admin" class="section">
+            <h2 style="margin-bottom: 20px; color: var(--primary);">Admin Dashboard</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Game</th>
+                        <th>UID</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="adminOrdersList">
+                    <!-- Admin orders injected here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- LOGIN SECTION -->
+        <div id="login" class="section">
+            <div class="form-container">
+                <h2 style="text-align: center; margin-bottom: 20px;">Login</h2>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUser">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPass">
+                </div>
+                <button class="btn" onclick="login()">Login</button>
+                <p style="margin-top: 10px; text-align: center; font-size: 0.9rem;">Already have an account? Login</p>            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // Sample Data
+    const games = [
+        { id: 1, name: 'Free Fire', image: '/images/free-fire.jpg' },
+    ];
+
+    const packages = [
+        { id: 1, name: '25 Diamonds' },
+        { id: 2, name: '50 Diamonds' },
+        { id: 3, name: '115 Diamonds' },
+        { id: 4, name: '240 Diamonds' },
+        { id: 5, name: '355 Diamonds' },
+        { id: 6, name: '480 Diamonds' },
+        { id: 7, name: '610 Diamonds' },
+        { id: 8, name: '725 Diamonds' },
+        { id: 9, name: '850 Diamonds' },
+        { id: 10, name: '965 Diamonds' },
+        { id: 11, name: '1090 Diamonds' },
+        { id: 12, name: '1240 Diamonds' },
+        { id: 13, name: '1480 Diamonds' },
+        { id: 14, name: '1850 Diamonds' },
+        { id: 15, name: '2530 Diamonds' },
+        { id: 16, name: '3140 Diamonds' },
+        { id: 17, name: '3770 Diamonds' },
+        { id: 18, name: '5060 Diamonds' },
+        { id: 19, name: '7590 Diamonds' },
+        { id: 20, name: '10120 Diamonds' },
+        { id: 21, name: '15180 Diamonds' },
+        { id: 22, name: '20240 Diamonds' },
+        { id: 23, name: 'Weekly' },
+        { id: 24, name: 'Monthly' },
+        { id: 25, name: 'Weekly Lite' }
+    ];
+
+    let orders = [];
+    let currentUser = null;
+
+    // Initialize Game List
+    const gameList = document.getElementById('gameList');
+    games.forEach(game => {
+        const card = document.createElement('div');
+        card.className = 'game-card';
+        card.innerHTML = `
+            <img src="${game.image}" alt="${game.name}">
+            <div class="game-info">
+                <h3>${game.name}</h3>
+            </div>
+        `;
+        card.onclick = () => {
+            showSection('topup');
+            document.getElementById('uid').value = '';
+            document.getElementById('paymentMethod').value = 'bKash';
+            document.getElementById('transId').value = '';
+            document.getElementById('screenshot').value = '';
+        };
+        gameList.appendChild(card);
+    });
+
+    // Initialize Package List
+    const packageList = document.getElementById('packageList');
+    let selectedPackage = null;
+    packages.forEach(pkg => {
+        const card = document.createElement('div');
+        card.className = 'package-card';
+        card.innerHTML = `<h4>${pkg.name}</h4>`;
+        card.onclick = () => {
+            document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedPackage = pkg;
+        };
+        packageList.appendChild(card);
+    });
+
+    // Show Section Function
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+    }
+
+    // Submit Order Function
+    function submitOrder() {
+        const uid = document.getElementById('uid').value;
+        const method = document.getElementById('paymentMethod').value;
+        const transId = document.getElementById('transId').value;
+        
+        if (!uid || !selectedPackage || !method || !transId) {
+            alert('Please fill all fields');
+            return;
+        }
+
+        const order = {
+            id: orders.length + 1,
+            user: currentUser || 'Guest',
+            game: 'Free Fire',
+            uid: uid,
+            package: selectedPackage.name,
+            method: method,
+            transId: transId,
+            status: 'pending',
+            date: new Date().toLocaleDateString()
+        };
+
+        orders.push(order);
+        alert('Order submitted successfully! Your order ID: ' + order.id);
+        
+        document.getElementById('uid').value = '';
+        document.getElementById('paymentMethod').value = 'bKash';
+        document.getElementById('transId').value = '';
+        document.getElementById('screenshot').value = '';
+        document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+        selectedPackage = null;
+        
+        showSection('home');
+    }
+
+    // Display User Orders
+    function displayUserOrders() {
+        const userOrders = orders.filter(o => o.user === (currentUser || 'Guest'));
+        const container = document.getElementById('userOrdersList');
+        
+        if (userOrders.length === 0) {
+            container.innerHTML = '<p style="color: #aaa;">No orders yet</p>';
+            return;
+        }
+
+        let table = '<table><thead><tr><th>ID</th><th>Game</th><th>UID</th><th>Package</th><th>Method</th><th>Status</th><th>Date</th></tr></thead><tbody>';
+        userOrders.forEach(order => {
+            const statusClass = `status-${order.status}`;
+            table += `<tr>
+                <td>${order.id}</td>
+                <td>${order.game}</td>
+                <td>${order.uid}</td>
+                <td>${order.package}</td>
+                <td>${order.method}</td>
+                <td class="${statusClass}">${order.status.toUpperCase()}</td>
+                <td>${order.date}</td>
+            </tr>`;
+        });
+        table += '</tbody></table>';
+        container.innerHTML = table;
+    }
+
+    // Display Admin Orders
+    function displayAdminOrders() {
+        const container = document.getElementById('adminOrdersList');
+        
+        if (orders.length === 0) {
+            container.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #aaa;">No orders</td></tr>';
+            return;
+        }
+
+        container.innerHTML = '';
+        orders.forEach(order => {
+            const row = document.createElement('tr');
+            const statusClass = `status-${order.status}`;
+            row.innerHTML = `
+                <td>${order.id}</td>
+                <td>${order.user}</td>
+                <td>${order.game}</td>
+                <td>${order.uid}</td>
+                <td>${order.package}</td>
+                <td>${order.method}</td>
+                <td class="${statusClass}">${order.status.toUpperCase()}</td>
+                <td>
+                    <button class="btn" style="width: 80px; padding: 5px; background: #00ff00;" onclick="updateOrderStatus(${order.id}, 'completed')">Approve</button>
+                    <button class="btn" style="width: 80px; padding: 5px; background: red;" onclick="updateOrderStatus(${order.id}, 'rejected')">Reject</button>
+                </td>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    // Update Order Status
+    function updateOrderStatus(orderId, newStatus) {
+        const order = orders.find(o => o.id === orderId);
+        if (order) {
+            order.status = newStatus;
+            displayAdminOrders();
+            alert('Order status updated to ' + newStatus);
+        }
+    }
+
+    // Login Function
+    function login() {
+        const user = document.getElementById('loginUser').value;
+        const pass = document.getElementById('loginPass').value;
+        
+        if (!user || !pass) {
+            alert('Please enter username and password');
+            return;
+        }
+
+        currentUser = user;
+        alert('Welcome, ' + user + '!');
+        showSection('home');
+    }
+
+    // Update displays when sections are shown
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+                if (mutation.target.id === 'orders' && mutation.target.classList.contains('active')) {
+                    displayUserOrders();
+                }
+                if (mutation.target.id === 'admin' && mutation.target.classList.contains('active')) {
+                    displayAdminOrders();
+                }
+            }
+        });
+    });
+
+    document.querySelectorAll('.section').forEach(section => {
+        observer.observe(section, { attributes: true });
+    });
+</script>
+</html>
